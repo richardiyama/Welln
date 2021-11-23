@@ -6,13 +6,14 @@ import { createStackNavigator } from "react-navigation-stack";
 
 import Login from "../screens/Login";
 import SignUp from "../screens/SignUp";
+import Welcome from "../screens/Welcome";
 
 
 import { theme } from "../constants";
 
 const screens = createStackNavigator(
   {
-   
+    Welcome,
     Login,
     SignUp,
    

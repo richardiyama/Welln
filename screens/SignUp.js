@@ -4,8 +4,10 @@ import {
   ActivityIndicator,
   Keyboard,
   KeyboardAvoidingView,
+  Picker,
   StyleSheet
 } from "react-native";
+import DatePicker from 'react-native-datepicker'
 
 import { Button, Block, Input, Text } from "../components";
 import { theme } from "../constants";
@@ -13,7 +15,11 @@ import { theme } from "../constants";
 export default class SignUp extends Component {
   state = {
     email: null,
-    username: null,
+    firstname: null,
+    lastname: null,
+    dateofbirth:null,
+    gender:null,
+    confirmpassword:null,
     password: null,
     errors: [],
     loading: false
@@ -21,7 +27,7 @@ export default class SignUp extends Component {
 
   handleSignUp() {
     const { navigation } = this.props;
-    const { email, username, password } = this.state;
+    const { email, firstname,lastname,dateofbirth,gender,confirmpassword, password } = this.state;
     const errors = [];
 
     Keyboard.dismiss();
@@ -29,8 +35,10 @@ export default class SignUp extends Component {
 
     // check with backend API or with some static data
     if (!email) errors.push("email");
-    if (!username) errors.push("username");
+    if (!firstname) errors.push("firstname");
+    if (!lastname) errors.push("lasname");
     if (!password) errors.push("password");
+    if (!confirmpassword) errors.push("confirmpassword");
 
     this.setState({ errors, loading: false });
 
@@ -63,6 +71,20 @@ export default class SignUp extends Component {
             Sign Up
           </Text>
           <Block middle>
+          <Input
+              label="First Name"
+              error={hasErrors("firstname")}
+              style={[styles.input, hasErrors("firstname")]}
+              defaultValue={this.state.firstname}
+              onChangeText={text => this.setState({ firstname: text })}
+            />
+             <Input
+              label="Last Name"
+              error={hasErrors("lastname")}
+              style={[styles.input, hasErrors("lastname")]}
+              defaultValue={this.state.username}
+              onChangeText={text => this.setState({ username: text })}
+            />
             <Input
               email
               label="Email"
@@ -71,13 +93,46 @@ export default class SignUp extends Component {
               defaultValue={this.state.email}
               onChangeText={text => this.setState({ email: text })}
             />
-            <Input
-              label="Username"
-              error={hasErrors("username")}
-              style={[styles.input, hasErrors("username")]}
-              defaultValue={this.state.username}
-              onChangeText={text => this.setState({ username: text })}
+            <Picker
+        selectedValue={this.state.gender}
+        style={{ height: 50, width: 150 }}
+        onValueChange={(itemValue, itemIndex) => this.setState({gender: itemValue})}
+      >
+        <Picker.Item label="Male" value="male" />
+        <Picker.Item label="Female" value="female" />
+      </Picker>
+
+      <DatePicker
+        style={{width: 200}}
+        date={this.state.dateofbirth}
+        mode="date"
+        placeholder="select date"
+        format="YYYY-MM-DD"
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0
+          },
+          dateInput: {
+            marginLeft: 36
+          }
+          
+        }}
+        onDateChange={(date) => {this.setState({dateofbirth: date})}}
+      />
+           <Input
+              secure
+              label="Confirm Password"
+              error={hasErrors("confirmpassword")}
+              style={[styles.input, hasErrors("confirmpassword")]}
+              defaultValue={this.state.confirmpassword}
+              onChangeText={text => this.setState({ confirmpassword: text })}
             />
+
             <Input
               secure
               label="Password"
